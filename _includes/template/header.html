@@ -1,0 +1,58 @@
+
+<header class="site-header">
+    <div class="container-fluid sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+            <div class="container">
+                <a class="navbar-brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto">
+                        {% assign nav_pages = site.html_pages | where_exp: 'p','p.nav' | sort: 'nav_order' %}
+                        {% assign top_nav_pages = nav_pages | where_exp: 'p','p.nav_parent == nil' %}
+                        {% for p in top_nav_pages %}
+                        {% assign child_pages = nav_pages | where: 'nav_parent', p.nav %}
+                        <li class="nav-item{% if child_pages.size > 0 %} dropdown{% endif %}">
+                            {% if child_pages.size > 0 %}
+                            <button class="nav-link dropdown-toggle{% if page.url == p.url %} active{% endif %}" type="button" data-bs-toggle="dropdown" aria-expanded="false">{% if p.nav == true %}{{ p.title }}{% else %}{{ p.nav }}{% endif %}</button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item{% if page.url == p.url %} active{% endif %}" href="{{ p.url | relative_url }}">{% if p.nav == true %}{{ p.title }}{% else %}{{ p.nav }}{% endif %}</a></li>
+                                {% for child in child_pages %}
+                                <li><a class="dropdown-item{% if page.url == child.url %} active{% endif %}" {% if page.url == child.url %}aria-current="page"{% endif %} href="{{ child.url | relative_url }}">{% if child.nav == true %}{{ child.title }}{% else %}{{ child.nav }}{% endif %}</a></li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <a class="nav-link{% if page.url == p.url %} active{% endif %}" {% if page.url == p.url %}aria-current="page"{% endif %} href="{{ p.url | relative_url }}">{% if p.nav == true %}{{ p.title }}{% else %}{{ p.nav }}{% endif %}</a>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% if site.search == true %}
+                    <script>
+                        function site_search() {
+                            var query = document.getElementById("site-search").value;
+                            window.open("{{ '/search.html' | relative_url }}?q=" + encodeURIComponent(query), "_self" );
+                            }
+                    </script>
+                    <form class="d-flex" onsubmit="site_search(); return false;">
+                        <div class="input-group">
+                            <input id="site-search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">{% include icon.html icon="search" label="Submit Search" %}</button>
+                            </div>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="container-fluid">
+        <figure class="site-banner">
+            <img src="{{ '/assets/images/mrlebies-red-backs-1201550_1920.jpg' | relative_url }}" alt="Neuntöter perched on a branch" fetchpriority="high">
+        </figure>
+    </div>
+</header>

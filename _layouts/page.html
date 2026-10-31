@@ -1,0 +1,14 @@
+---
+layout: default 
+---
+<div class="container my-3">
+    {% if page.title %}<h1>{{ page.title }}</h1>{% endif %}
+    {{ content }}
+    {% if page.layout == 'page' and page.url contains '/202' %}
+    <p class="mt-4">
+        <a class="btn px-3 event-teaser__link" href="{{ '/anlaesse/' | relative_url }}">
+            &larr; Zurück zu Anlässe
+        </a>
+    </p>
+    {% endif %}
+</div>
